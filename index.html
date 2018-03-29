@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Template • TodoMVC</title>
+		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<!-- CSS overrides - remove if you don't need it -->
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+		<section class="todoapp" id="todoapp" v-clack>
+			<header class="header">
+				<h1>TodoList</h1>
+				<input class="new-todo"
+				placeholder="What needs to be done?"
+				@keyup.enter="addTodo"
+				v-focus
+			>
+			</header>
+			<template v-if="todos.length">
+				<section class="main">
+					<input
+						id="toggle-all"
+						class="toggle-all"
+						type="checkbox"
+						v-model="toggleSelect"
+					>
+					<label for="toggle-all">Mark all as complete</label>
+					<ul class="todo-list">
+						<!--
+							未完成状态：不需要样式；
+							完成状态：completed；
+							编辑状态：editing；
+							v-bind：简写 “ : ”；
+							事件绑定：@click v-on的简写；
+					 -->
+						<li v-for="(item,index) of filterTodos" :class="{completed:item.completed,editing:item === itemEditing}">
+							<div class="view">
+								<input class="toggle" type="checkbox" v-model="item.completed">
+								<label @dblclick="itemEditing = item">{{ item.itemName }}</label>
+								<button class="destroy" @click="removeTodo(index,$event)"></button>
+							</div>
+							<input
+								class="edit"
+								:value="item.itemName"
+								@blur="resItemEditing(item,index,$event)"
+								@keyup.enter="resItemEditing(item,index,$event)"
+								@keyup.esc="itemEditing = null"
+								v-editing-focus="item === itemEditing"
+							>
+						</li>
+					</ul>
+				</section>
+				<footer class="footer">
+					<span class="todo-count"><strong>{{ getLeftItem }}</strong> {{ getLeftItem ? 'items' : 'item' }} left</span>
+					<ul class="filters">
+						<li>
+							<a :class="{selected:filterStat === 'all'}" href="#/">All</a>
+						</li>
+						<li>
+							<a :class="{selected:filterStat === 'active'}" href="#/active">Active</a>
+						</li>
+						<li>
+							<a :class="{selected:filterStat === 'completed'}" href="#/completed">Completed</a>
+						</li>
+					</ul>
+					<button class="clear-completed" @click="removeAllDone">Clear completed</button>
+				</footer>
+			</template>
+		</section>
+		<footer class="info">
+			<p>Double-click to edit a todo</p>
+			<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
+			<p>Created by <a href="http://todomvc.com">you</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+		<script src="node_modules/todomvc-common/base.js"></script>
+		<script src="node_modules/vue/dist/vue.min.js"></script>
+		<script src="js/app.js"></script>
+	</body>
+</html>
